@@ -90,6 +90,7 @@ int main() {
 
     //=================================================================
     //Optimize the sorting algorithm further by using modulo %.
+    printf("\nRunning on optimized version\n");
     randomizeData(data);
     startTime = omp_get_wtime();
     sort_data_mod(data);
