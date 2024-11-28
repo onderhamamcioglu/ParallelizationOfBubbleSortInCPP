@@ -142,6 +142,7 @@ int main() {
     //=================================================================
 
     /*
+    // Use at your own risk, runs more than 10 minutes sometimes :D
     //=================================================================
     //Optimize the sorting algorithm further by using modulo %.
     printf("\nRunning on bogo sort\n");
