@@ -3,9 +3,9 @@
 
 #define DATA_SIZE 50000
 
-void sort_data(int* data) {
-    for (int i = 0; i < DATA_SIZE; i++) {
-        for (int j = 0; j < DATA_SIZE - 1; j++) {
+void sort_data(int *data, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size - 1; j++) {
             if (data[j] > data[j + 1]) {
                 int help = data[j];
                 data[j] = data[j + 1];
@@ -15,7 +15,7 @@ void sort_data(int* data) {
     }
 }
 
-void sort_data_parallelized(int* data) {
+void sort_data_parallelized(int *data) {
 #pragma omp parallel for schedule(dynamic)
     for (int i = 0; i < DATA_SIZE; i++) {
         for (int j = 0; j < DATA_SIZE - 1; j++) {
@@ -28,7 +28,8 @@ void sort_data_parallelized(int* data) {
     }
 }
 
-void sort_data_mod(int* data) { // Separate odd and even numbers by using modulo
+void sort_data_mod(int *data) {
+    // Separate odd and even numbers by using modulo
     int oddNumbers[DATA_SIZE], evenNumbers[DATA_SIZE];
     int oddCount = 0, evenCount = 0;
 
@@ -42,6 +43,10 @@ void sort_data_mod(int* data) { // Separate odd and even numbers by using modulo
         }
     }
 
+    sort_data(oddNumbers, oddCount);
+    sort_data(evenNumbers, evenCount);
+
+    /*
     for (int i = 0; i < oddCount; i++) {
         for (int j = 0; j < oddCount - 1; j++) {
             if (oddNumbers[j] > oddNumbers[j + 1]) {
@@ -61,6 +66,7 @@ void sort_data_mod(int* data) { // Separate odd and even numbers by using modulo
             }
         }
     }
+    */
 
     int j = 0;
     for (int i = 0; i < oddCount; i++) {
@@ -71,20 +77,20 @@ void sort_data_mod(int* data) { // Separate odd and even numbers by using modulo
     }
 }
 
-void randomizeData(int* data) {
+void randomizeData(int *data) {
     for (int i = 0; i < DATA_SIZE; ++i) {
         data[i] = std::rand();
     }
     printf("Before sorting: ");
-    for (int i  = DATA_SIZE - 1; i >= DATA_SIZE - 10; i--) {
+    for (int i = DATA_SIZE - 1; i >= DATA_SIZE - 10; i--) {
         printf("%d ", data[i]);
     }
     printf("\n");
 }
 
-void printData(int* data) {
+void printData(int *data) {
     printf("After sorting: ");
-    for (int i  = DATA_SIZE - 1; i >= DATA_SIZE - 10; i--) {
+    for (int i = DATA_SIZE - 1; i >= DATA_SIZE - 10; i--) {
         printf("%d ", data[i]);
     }
     printf("\n");
@@ -96,12 +102,14 @@ int main() {
 
     int data[DATA_SIZE];
 
+    // IDEA: run the following on separate threads
+
     //=================================================================
     //Single Thread
     printf("\nRunning on single thread\n");
     randomizeData(data);
     startTime = omp_get_wtime();
-    sort_data(data);
+    sort_data(data, DATA_SIZE);
     endTime = omp_get_wtime();
     printf("Time taken: %f\n", endTime - startTime);
     printData(data);
