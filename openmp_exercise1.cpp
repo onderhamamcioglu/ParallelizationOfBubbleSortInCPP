@@ -95,18 +95,11 @@ void printData(int *data) {
     printf("\n");
 }
 
-// Experimental :)
-void shuffle(int* arr, int size);
-bool isSorted(int* arr, int size);
-void bogoSort(int* data);
-
 int main() {
     std::srand(time(nullptr));
     double startTime, endTime;
 
     int data[DATA_SIZE];
-
-    // IDEA: run the following on separate threads
 
     //=================================================================
     //Single Thread
@@ -141,37 +134,5 @@ int main() {
     printData(data);
     //=================================================================
 
-    /*
-    //=================================================================
-    //Optimize the sorting algorithm further by using modulo %.
-    printf("\nRunning on bogo sort\n");
-    randomizeData(data);
-    startTime = omp_get_wtime();
-    bogoSort(data);
-    endTime = omp_get_wtime();
-    printf("Time taken: %f\n", endTime - startTime);
-    printData(data);
-    //=================================================================
-    */
     return 0;
-}
-
-void shuffle(int* arr, int size) {
-    for (int i = 0; i < size; ++i) {
-        int randomIndex = rand() % size;
-        std::swap(arr[i], arr[randomIndex]);
-    }
-}
-bool isSorted(int* arr, int size) {
-    for (int i = 0; i < size - 1; ++i) {
-        if (arr[i] > arr[i + 1]) {
-            return false;
-        }
-    }
-    return true;
-}
-void bogoSort(int* data) {
-    while (!isSorted(data, DATA_SIZE)) {
-        shuffle(data, DATA_SIZE);
-    }
 }
