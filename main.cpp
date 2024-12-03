@@ -1,3 +1,7 @@
+//
+//  WARNING: THIS CODE DOES NOT WORK PROPERLY, DO NOT USE IT
+//
+
 #include <iostream>
 #include <omp.h>
 
@@ -28,7 +32,8 @@ void sort_data_parallelized(int *data) {
     }
 }
 
-void sort_data_mod(int *data) { // Separate odd and even numbers by using modulo
+void sort_data_mod(int *data) {
+    // Separate odd and even numbers by using modulo
     int oddNumbers[DATA_SIZE], evenNumbers[DATA_SIZE];
     int oddCount = 0, evenCount = 0;
 
@@ -68,11 +73,15 @@ void sort_data_mod(int *data) { // Separate odd and even numbers by using modulo
     */
 
     int j = 0;
-    for (int i = 0; i < oddCount; i++) {
-        data[j++] = oddNumbers[i];
-    }
-    for (int i = 0; i < evenCount; i++) {
-        data[j++] = evenNumbers[i];
+    int e = 0;
+    int o = 0;
+    while (j < DATA_SIZE) {
+        if (oddNumbers[o] > evenNumbers[e]) {
+            data[j++] = oddNumbers[o++];
+        }
+        else {
+            data[j++] = evenNumbers[e++];
+        }
     }
 }
 
@@ -96,9 +105,11 @@ void printData(int *data) {
 }
 
 // Experimental :)
-void shuffle(int* arr, int size);
-bool isSorted(int* arr, int size);
-void bogoSort(int* data);
+void shuffle(int *arr, int size);
+
+bool isSorted(int *arr, int size);
+
+void bogoSort(int *data);
 
 int main() {
     std::srand(time(nullptr));
@@ -107,6 +118,18 @@ int main() {
     int data[DATA_SIZE];
 
     // IDEA: run the following on separate threads
+
+
+    //=================================================================
+    //Parallelized
+    printf("\nRunning on parallel version\n");
+    randomizeData(data);
+    startTime = omp_get_wtime();
+    sort_data_parallelized(data);
+    endTime = omp_get_wtime();
+    printf("Time taken: %f\n", endTime - startTime);
+    printData(data);
+    //=================================================================
 
     //=================================================================
     //Single Thread
@@ -119,16 +142,7 @@ int main() {
     printData(data);
     //=================================================================
 
-    //=================================================================
-    //Parallelized
-    printf("\nRunning on parallel version\n");
-    randomizeData(data);
-    startTime = omp_get_wtime();
-    sort_data_parallelized(data);
-    endTime = omp_get_wtime();
-    printf("Time taken: %f\n", endTime - startTime);
-    printData(data);
-    //=================================================================
+
 
     //=================================================================
     //Optimize the sorting algorithm further by using modulo %.
@@ -157,13 +171,14 @@ int main() {
     return 0;
 }
 
-void shuffle(int* arr, int size) {
+void shuffle(int *arr, int size) {
     for (int i = 0; i < size; ++i) {
         int randomIndex = rand() % size;
         std::swap(arr[i], arr[randomIndex]);
     }
 }
-bool isSorted(int* arr, int size) {
+
+bool isSorted(int *arr, int size) {
     for (int i = 0; i < size - 1; ++i) {
         if (arr[i] > arr[i + 1]) {
             return false;
@@ -171,7 +186,8 @@ bool isSorted(int* arr, int size) {
     }
     return true;
 }
-void bogoSort(int* data) {
+
+void bogoSort(int *data) {
     while (!isSorted(data, DATA_SIZE)) {
         shuffle(data, DATA_SIZE);
     }

@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(OpenMP REQUIRED)
 
 add_executable(ParallelizationOfBubbleSort main.cpp
-        openmp_exercise1.cpp
 )
 
 # Link OpenMP to the target
